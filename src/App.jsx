@@ -31,6 +31,7 @@ import {
   SiFastapi,
   SiFlask,
   SiGit,
+  SiHackerrank,
   SiHtml5,
   SiHuggingface,
   SiJavascript,
@@ -395,6 +396,12 @@ export default function App() {
             </svg>
           </span>
           <span className="social-dock-label">Mail</span>
+        </a>
+        <a href="https://www.hackerrank.com/profile/Jyothi_Bhavani" target="_blank" rel="noreferrer" className="social-dock-link" aria-label="HackerRank">
+          <span className="social-dock-icon">
+            <SiHackerrank aria-hidden="true" />
+          </span>
+          <span className="social-dock-label">HackerRank</span>
         </a>
       </aside>
 
@@ -1236,6 +1243,16 @@ export default function App() {
               >
                 <FaEnvelope aria-hidden="true" />
               </a>
+              <a
+                href="https://www.hackerrank.com/profile/Jyothi_Bhavani"
+                target="_blank"
+                rel="noreferrer"
+                className="contact-social-link"
+                aria-label="HackerRank"
+                title="HackerRank"
+              >
+                <SiHackerrank aria-hidden="true" />
+              </a>
             </div>
             <a className="contact-location" href="mailto:illajyothibhavani@gmail.com">
               illajyothibhavani@gmail.com
@@ -1311,6 +1328,9 @@ export default function App() {
               </a>
               <a href="mailto:illajyothibhavani@gmail.com" aria-label="Email" title="Email">
                 <FaEnvelope aria-hidden="true" />
+              </a>
+              <a href="https://www.hackerrank.com/profile/Jyothi_Bhavani" target="_blank" rel="noreferrer" aria-label="HackerRank" title="HackerRank">
+                <SiHackerrank aria-hidden="true" />
               </a>
             </div>
           </div>
