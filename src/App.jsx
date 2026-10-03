@@ -233,6 +233,8 @@ export default function App() {
   const [activeInternshipGroup, setActiveInternshipGroup] = useState('infosys');
   const [activeOthersView, setActiveOthersView] = useState('computer-courses');
   const [selectedBadge, setSelectedBadge] = useState(null);
+  const [contactSubmitting, setContactSubmitting] = useState(false);
+  const [contactStatus, setContactStatus] = useState(null);
 
   const filteredCertifications = certificationsData.filter(
     (cert) => activeCertCategory === 'All' || cert.category === activeCertCategory,
@@ -312,6 +314,39 @@ export default function App() {
     setMenuOpen(false);
     const el = document.getElementById(id);
     if (el) el.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const handleContactSubmit = async (event) => {
+    event.preventDefault();
+    setContactSubmitting(true);
+    setContactStatus(null);
+
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+    const payload = Object.fromEntries(formData.entries());
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const result = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Your message could not be saved. Please try again later.');
+      }
+
+      form.reset();
+      setContactStatus({ type: 'success', message: 'Your message was saved successfully.' });
+    } catch (error) {
+      setContactStatus({
+        type: 'error',
+        message: error instanceof Error ? error.message : 'Your message could not be saved. Please try again later.',
+      });
+    } finally {
+      setContactSubmitting(false);
+    }
   };
 
   return (
@@ -1193,24 +1228,33 @@ export default function App() {
             </div>
             <div className="contact-card-divider" />
 
-            <form className="contact-card-form" onSubmit={(e) => e.preventDefault()}>
+            <form className="contact-card-form" onSubmit={handleContactSubmit}>
               <div className="contact-fields">
                 <div className="contact-form-field">
                   <label htmlFor="cf-name">Your Name</label>
-                  <input id="cf-name" type="text" placeholder="e.g. John Doe" />
+                  <input id="cf-name" name="name" type="text" placeholder="e.g. John Doe" autoComplete="name" maxLength={100} required />
                 </div>
                 <div className="contact-form-field">
                   <label htmlFor="cf-email">Email Address</label>
-                  <input id="cf-email" type="email" placeholder="e.g. john@example.com" />
+                  <input id="cf-email" name="email" type="email" placeholder="e.g. john@example.com" autoComplete="email" maxLength={254} required />
                 </div>
                 <div className="contact-form-field contact-message-field">
                   <label htmlFor="cf-msg">Message</label>
-                  <textarea id="cf-msg" rows={4} placeholder="Your message or opportunity..." />
+                  <textarea id="cf-msg" name="message" rows={4} placeholder="Your message or opportunity..." maxLength={5000} required />
                 </div>
               </div>
-              <button type="submit" className="contact-send-button">
-                Send Message <FaArrowRight aria-hidden="true" />
+              <div className="contact-form-trap" aria-hidden="true">
+                <label htmlFor="cf-website">Leave this field empty</label>
+                <input id="cf-website" name="website" type="text" tabIndex="-1" autoComplete="off" />
+              </div>
+              <button type="submit" className="contact-send-button" disabled={contactSubmitting}>
+                {contactSubmitting ? 'Saving...' : 'Send Message'} <FaArrowRight aria-hidden="true" />
               </button>
+              {contactStatus && (
+                <p className={`contact-form-status ${contactStatus.type}`} role="status" aria-live="polite">
+                  {contactStatus.message}
+                </p>
+              )}
             </form>
           </div>
         </div>

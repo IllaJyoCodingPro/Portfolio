@@ -2552,6 +2552,15 @@ svg {
   grid-column: 1 / -1;
 }
 
+#contact .contact-form-trap {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
 #contact .contact-form-field {
   display: flex;
   flex-direction: column;
@@ -2614,6 +2623,25 @@ svg {
   background: transparent;
   color: var(--cyan);
   transform: translateY(-1px);
+}
+
+#contact .contact-send-button:disabled {
+  cursor: wait;
+  opacity: 0.7;
+  transform: none;
+}
+
+#contact .contact-form-status {
+  font-size: 14px;
+  text-align: center;
+}
+
+#contact .contact-form-status.success {
+  color: var(--cyan);
+}
+
+#contact .contact-form-status.error {
+  color: #ff8585;
 }
 
 /* ================================================================
