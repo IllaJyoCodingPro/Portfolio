@@ -1,19 +1,292 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import {
+  FaArrowUpRightFromSquare,
+  FaArrowRight,
+  FaBrain,
+  FaCertificate,
+  FaCode,
+  FaComments,
+  FaEnvelope,
+  FaEye,
+  FaFileExcel,
+  FaFilePowerpoint,
+  FaFileWord,
+  FaGithub,
+  FaJava,
+  FaLinkedin,
+  FaLinux,
+  FaPaintbrush,
+  FaPlug,
+  FaPython,
+  FaReact,
+  FaRobot,
+  FaServer,
+  FaTrophy,
+  FaVial,
+  FaWandMagicSparkles,
+  FaXmark,
+} from 'react-icons/fa6';
+import {
+  SiCss,
+  SiFastapi,
+  SiFlask,
+  SiGit,
+  SiHtml5,
+  SiHuggingface,
+  SiJavascript,
+  SiMongodb,
+  SiMysql,
+  SiPostgresql,
+  SiSpringboot,
+} from 'react-icons/si';
+import laptopMockup from './assets/laptop-mockup.png';
+import {
+  CERT_CATEGORIES,
+  certificationsData,
+  computerCourses,
+  honorsAndAwards,
+  infosysBadges,
+} from './data/certifications';
+
+const educationImageAssets = import.meta.glob('./assets/{college-kietw,junior-college-mgr,school-ravindra}.*', {
+  eager: true,
+  query: '?url',
+  import: 'default',
+});
+
+const educationImageUrl = (assetName) =>
+  Object.entries(educationImageAssets).find(([path]) => path.includes(`/${assetName}.`))?.[1];
+
+const skillCategories = [
+  {
+    name: 'Programming Languages',
+    skills: [
+      { name: 'Java', Icon: FaJava, color: '#ED8B00' },
+      { name: 'Python', Icon: FaPython, color: '#3776AB' },
+    ],
+  },
+  {
+    name: 'Frontend',
+    skills: [
+      { name: 'HTML', Icon: SiHtml5, color: '#E34F26' },
+      { name: 'CSS', Icon: SiCss, color: '#1572B6' },
+      { name: 'JavaScript', Icon: SiJavascript, color: '#F7DF1E' },
+      { name: 'React.js', Icon: FaReact, color: '#61DAFB' },
+    ],
+  },
+  {
+    name: 'Backend & APIs',
+    skills: [
+      { name: 'Spring Boot', Icon: SiSpringboot, color: '#6DB33F' },
+      { name: 'Flask', Icon: SiFlask, color: '#FFFFFF' },
+      { name: 'FastAPI', Icon: SiFastapi, color: '#009688' },
+      { name: 'REST APIs', Icon: FaServer, color: '#4F8CC9' },
+      { name: 'API Integration', Icon: FaPlug, color: '#8A9BFF' },
+    ],
+  },
+  {
+    name: 'Databases',
+    skills: [
+      { name: 'MySQL', Icon: SiMysql, color: '#4479A1' },
+      { name: 'PostgreSQL', Icon: SiPostgresql, color: '#4169E1' },
+      { name: 'MongoDB', Icon: SiMongodb, color: '#47A248' },
+    ],
+  },
+  {
+    name: 'AI & Machine Learning',
+    skills: [
+      { name: 'Machine Learning', Icon: FaBrain, color: '#E6A700' },
+      { name: 'Generative AI', Icon: FaWandMagicSparkles, color: '#B277D6' },
+      { name: 'Agentic AI', Icon: FaRobot, color: '#EF8354' },
+      { name: 'NLP', Icon: FaComments, color: '#4DB6AC' },
+      { name: 'Computer Vision', Icon: FaEye, color: '#E76F51' },
+      { name: 'Hugging Face', Icon: SiHuggingface, color: '#FFD21E' },
+    ],
+  },
+  {
+    name: 'Tools',
+    skills: [
+      { name: 'Git', Icon: SiGit, color: '#F05032' },
+      { name: 'GitHub', Icon: FaGithub, color: '#F0F6FC' },
+      { name: 'Linux', Icon: FaLinux, color: '#FCC624' },
+      { name: 'VS Code', Icon: FaCode, color: '#007ACC' },
+      { name: 'Manual Testing', Icon: FaVial, color: '#52A5C4' },
+      { name: 'MS Excel', Icon: FaFileExcel, color: '#217346' },
+      { name: 'MS Word', Icon: FaFileWord, color: '#2B579A' },
+      { name: 'PowerPoint', Icon: FaFilePowerpoint, color: '#D24726' },
+      { name: 'Canva', Icon: FaPaintbrush, color: '#00C4CC' },
+    ],
+  },
+];
+
+const internshipGroups = [
+  {
+    id: 'infosys',
+    organization: 'Infosys Springboard',
+    program: 'Virtual Internship 6.0',
+    internships: [
+      {
+        title: 'Python Full Stack Developer',
+        duration: 'Dec 2025 – Mar 2026',
+        description: 'Developed a full-stack platform integrating real-time data for tracking, analytics, and visualization.',
+        image: '/certificates/Infosys_i1.png',
+      },
+    ],
+  },
+  {
+    id: 'swecha',
+    organization: 'Swecha · IIIT Hyderabad',
+    program: 'Summer of AI Internship Program',
+    internships: [
+      {
+        title: 'Telugu LLM Data Contribution',
+        duration: 'May 2024 – Jun 2024',
+        description: 'Contributed Telugu language data for large language model development through a national datathon.',
+        image: '/certificates/Swecha_i1.jpg',
+      },
+    ],
+  },
+  {
+    id: 'apssdc',
+    organization: 'Skill AP · APSSDC',
+    program: 'Training delivered with Edunet Foundation',
+    internships: [
+      {
+        title: 'Artificial Intelligence and Machine Learning',
+        duration: 'May 2024 – Jun 2024',
+        description: 'Implemented machine learning models in Python for practical applications.',
+        image: '/certificates/APSSDC_i1.png',
+      },
+      {
+        title: 'Cyber Security with Kali Linux',
+        duration: 'May 2024 – Jun 2024',
+        description: 'Completed cybersecurity training focused on Kali Linux and foundational security practices.',
+        image: '/certificates/APSSDC_i2.png',
+      },
+      {
+        title: 'Employability Skills',
+        duration: 'May 2024 – Jun 2024',
+        description: 'Strengthened communication, teamwork, and professional workplace skills.',
+        image: '/certificates/APSSDC_i3.png',
+      },
+    ],
+  },
+  {
+    id: 'aicte-eduskills',
+    organization: 'EduSkills Academy · AICTE',
+    program: 'Virtual Internship Programs',
+    internships: [
+      {
+        title: 'Altair Data Science Master',
+        duration: 'Oct – Dec 2024',
+        description: 'Completed data analysis, visualization, and foundational machine learning activities using Altair data science tools.',
+        image: '/certificates/AICTE_i1.png',
+      },
+      {
+        title: 'Python Full Stack Developer',
+        duration: 'Oct – Dec 2024',
+        description: 'Built web applications using Python with frontend and backend integration.',
+        image: '/certificates/AICTE_i2.png',
+      },
+      {
+        title: 'Google AI-ML',
+        duration: 'Jan – Mar 2025',
+        description: 'Explored AI and machine learning tools and implemented foundational models for practical problems.',
+        image: '/certificates/AICTE_i3.png',
+      },
+      {
+        title: 'Web Full Stack Developer',
+        duration: 'Apr – Jun 2025',
+        description: 'Developed dynamic web applications with API integration and responsive user interfaces.',
+        image: '/certificates/AICTE_i4.png',
+      },
+      {
+        title: 'Java Full Stack Developer',
+        duration: 'Jul – Sep 2025',
+        description: 'Built full-stack applications with backend integration and responsive frontend design.',
+        image: '/certificates/AICTE_i5.png',
+      },
+      {
+        title: 'Google Android Developer',
+        duration: 'Oct – Dec 2025',
+        description: 'Developed Android applications with a focus on user interface and functionality.',
+        image: '/certificates/AICTE_i6.png',
+      },
+    ],
+  },
+];
+
+const CERTIFICATES_PER_PAGE = 9;
 
 export default function App() {
   const [activeSection, setActiveSection] = useState('home');
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(true);
+  const [activeSkillsCategory, setActiveSkillsCategory] = useState('Programming Languages');
+
+  const allSkills = skillCategories.flatMap((category) => category.skills);
+  const selectedSkills = skillCategories.find((category) => category.name === activeSkillsCategory)?.skills ?? [];
+
+  const [activeCertCategory, setActiveCertCategory] = useState('All');
+  const [certPage, setCertPage] = useState(1);
+  const [previewCert, setPreviewCert] = useState(null);
+  const [activeInternshipGroup, setActiveInternshipGroup] = useState('infosys');
+  const [activeOthersView, setActiveOthersView] = useState('computer-courses');
+  const [selectedBadge, setSelectedBadge] = useState(null);
+
+  const filteredCertifications = certificationsData.filter(
+    (cert) => activeCertCategory === 'All' || cert.category === activeCertCategory,
+  );
+  const certificatePageCount = Math.ceil(filteredCertifications.length / CERTIFICATES_PER_PAGE);
+  const visibleCertifications = filteredCertifications.slice(
+    (certPage - 1) * CERTIFICATES_PER_PAGE,
+    certPage * CERTIFICATES_PER_PAGE,
+  );
+  const firstVisibleCertificate = filteredCertifications.length
+    ? (certPage - 1) * CERTIFICATES_PER_PAGE + 1
+    : 0;
+  const lastVisibleCertificate = Math.min(
+    certPage * CERTIFICATES_PER_PAGE,
+    filteredCertifications.length,
+  );
+
+  const goToCertificatePage = (page) => {
+    setCertPage(page);
+    document.getElementById('certificates-grid')?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+    });
+  };
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        setPreviewCert(null);
+        setSelectedBadge(null);
+      }
+    };
+    if (previewCert || selectedBadge) {
+      window.addEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = '';
+    };
+  }, [previewCert, selectedBadge]);
 
   // Nav links
   const navLinks = [
     { id: 'home', label: 'Home' },
     { id: 'about', label: 'About' },
     { id: 'education', label: 'Education' },
-    { id: 'skills', label: 'Skills' },
+    { id: 'skills', label: 'My Skills' },
     { id: 'projects', label: 'Projects' },
     { id: 'experience', label: 'Experience' },
     { id: 'certifications', label: 'Certifications' },
+    { id: 'others', label: 'Others' },
     { id: 'contact', label: 'Contact' },
   ];
 
@@ -119,25 +392,20 @@ export default function App() {
         <div className="hero-container">
           <div className="hero-text-col">
             <div className="hero-greeting-badge">
-              <span className="greeting-sparkle">✨</span>
               <span>Hello, I'm</span>
             </div>
             <h1 className="hero-name">Illa Jyothi Bhavani</h1>
             <div className="hero-roles">
               <span className="hero-role-tag">
-                <span className="tag-icon">☕</span>
                 <span>Aspiring Java Developer</span>
               </span>
               <span className="hero-role-tag">
-                <span className="tag-icon">💻</span>
                 <span>AI Full Stack Developer</span>
               </span>
               <span className="hero-role-tag">
-                <span className="tag-icon">🤖</span>
                 <span>Building GenAI &amp; Agentic AI Applications</span>
               </span>
               <span className="hero-role-tag">
-                <span className="tag-icon">🏢</span>
                 <span>Ex-Intern @ Infosys Springboard</span>
               </span>
             </div>
@@ -147,23 +415,12 @@ export default function App() {
             <div className="hero-cta-row">
               <button className="cta-btn primary" onClick={() => scrollTo('projects')}>
                 <span>View Projects</span>
-                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
               </button>
               <button className="cta-btn secondary" onClick={() => scrollTo('contact')}>
                 <span>Contact Me</span>
-                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg>
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><path d="M22 6l-10 7L2 6" /></svg>
               </button>
-            </div>
-          </div>
-          <div className="hero-avatar-col">
-            <div className="hero-avatar-ring">
-              <div className="hero-avatar-inner">
-                <span className="hero-avatar-emoji">👩‍💻</span>
-              </div>
-            </div>
-            <div className="hero-available-badge">
-              <span className="pulse-dot"></span>
-              <span>Open to Opportunities</span>
             </div>
           </div>
         </div>
@@ -184,117 +441,138 @@ export default function App() {
           </div>
           <div className="about-layout">
             <div className="about-card">
-              <h3 className="about-card-title">Who I Am</h3>
+              <h3 className="about-lead">I build thoughtful software that turns <span>ideas into impact.</span></h3>
               <p>
-                I'm a <strong>B.Tech graduate in Computer Science Engineering</strong> specialising in
-                <strong> Artificial Intelligence &amp; Data Science</strong> from Kakinada Institute of
-                Engineering and Technology for Women (KIETW).
+                I am a <strong>B.Tech graduate in Computer Science Engineering, specialising in
+                  Artificial Intelligence &amp; Data Science</strong>. I enjoy turning complex problems into
+                useful, maintainable digital products, from reliable backend services to intuitive interfaces.
               </p>
-              <p style={{ marginTop: '14px' }}>
-                I enjoy developing scalable software applications, working with AI/ML models, and
-                building clean, functional web interfaces. I adapt quickly and love tackling
-                real-world problems with technology.
+              <p>
+                My toolkit spans <strong>Java, Python, React, FastAPI, Flask, and MySQL</strong>. I explore
+                Generative AI and Agentic AI where they make a product more useful, with clean architecture,
+                thoughtful APIs, and scalability always in view.
               </p>
-              <p style={{ marginTop: '14px' }}>
-                Currently <strong style={{ color: 'var(--cyan)' }}>open to full-time roles</strong> in
-                Software Engineering, Full Stack Development, or AI &amp; Data Science.
+              <p>
+                Internships, hackathons, and personal projects have taught me to learn quickly and build
+                collaboratively. I am growing my skills in backend development and system design, and I am
+                open to opportunities to create dependable software with real-world value.
               </p>
+              <div className="about-focus-list" aria-label="Areas of focus">
+                <span>Backend systems</span>
+                <span>AI applications</span>
+                <span>Full-stack development</span>
+              </div>
             </div>
-            <div className="about-info-grid">
-              <div className="about-info-item"><span className="info-lbl">Name</span><span className="info-val">Illa Jyothi Bhavani</span></div>
-              <div className="about-info-item"><span className="info-lbl">Degree</span><span className="info-val">B.Tech CSE (AI &amp; DS)</span></div>
-              <div className="about-info-item"><span className="info-lbl">College</span><span className="info-val">KIETW, Kakinada</span></div>
-              <div className="about-info-item"><span className="info-lbl">CGPA</span><span className="info-val">8.28 / 10</span></div>
-              <div className="about-info-item"><span className="info-lbl">Location</span><span className="info-val">Mummidivaram, AP</span></div>
-              <div className="about-info-item"><span className="info-lbl">Email</span><span className="info-val"><a href="mailto:illajyothibhavani@gmail.com">illajyothibhavani@gmail.com</a></span></div>
-              <div className="about-info-item"><span className="info-lbl">Status</span><span className="info-val available">✅ Available for Hire</span></div>
-            </div>
+            {/* ── Laptop Mockup & Profile Card ── */}
+            <aside className="laptop-wrapper" aria-label="Developer profile">
+              <div className="laptop-container">
+                <div className="laptop-glow" aria-hidden="true" />
+                <img
+                  src={laptopMockup}
+                  alt="Laptop mockup displaying developer profile"
+                  className="laptop-mockup-img"
+                />
+                <div className="laptop-screen-overlay">
+                  <div className="ls-titlebar">
+                    <span className="ls-dot ls-dot-red" />
+                    <span className="ls-dot ls-dot-yellow" />
+                    <span className="ls-dot ls-dot-green" />
+                    <span className="ls-titlebar-label">profile</span>
+                  </div>
+                  <div className="ls-profile-head">
+                    <div className="ls-monogram" aria-hidden="true">JB</div>
+                    <div className="ls-profile-info">
+                      <p className="ls-label">DEVELOPER PROFILE</p>
+                      <h3 className="ls-name">Illa Jyothi Bhavani</h3>
+                      <p className="ls-role">Java Developer · AI Full Stack</p>
+                    </div>
+                  </div>
+                  <div className="ls-info-grid">
+                    <div className="ls-info-item">
+                      <span className="ls-info-key">DEGREE</span>
+                      <strong className="ls-info-val">B.Tech CSE (AI &amp; DS)</strong>
+                    </div>
+                    <div className="ls-info-item">
+                      <span className="ls-info-key">COLLEGE</span>
+                      <strong className="ls-info-val">KIETW, Kakinada</strong>
+                    </div>
+                    <div className="ls-info-item">
+                      <span className="ls-info-key">CGPA</span>
+                      <strong className="ls-info-val">8.28 / 10</strong>
+                    </div>
+                    <div className="ls-info-item">
+                      <span className="ls-info-key">LOCATION</span>
+                      <strong className="ls-info-val">Mummidivaram, AP</strong>
+                    </div>
+                  </div>
+                  <div className="ls-email-row">
+                    <span className="ls-info-key">EMAIL</span>
+                    <a href="mailto:illajyothibhavani@gmail.com" className="ls-email">illajyothibhavani@gmail.com</a>
+                  </div>
+                  <p className="ls-availability">
+                    <span className="ls-avail-dot" aria-hidden="true" />
+                    Available for opportunities
+                  </p>
+                </div>
+              </div>
+            </aside>
           </div>
         </div>
       </section>
 
       {/* ═══════════════════════════════════════════
-          SECTION 3 — EDUCATION TIMELINE
+          SECTION 3 — EDUCATION
       ═══════════════════════════════════════════ */}
       <section id="education" className="page-section alt-bg">
         <div className="section-container">
           <div className="section-heading-wrap">
-            <h2 className="section-heading">Education Timeline</h2>
+            <h2 className="section-heading">Education</h2>
             <div className="section-divider" />
           </div>
-          <div className="edu-timeline">
-
-            {/* ── B.Tech ── */}
-            <div className="edu-item">
-              <div className="edu-connector">
-                <div className="edu-node btech">
-                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zm0 8.55L4.74 9 12 5.05 19.26 9 12 11.55zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z" /></svg>
-                </div>
-                <div className="edu-line" />
+          <div className="education-card-grid">
+            <article className="education-card education-card-featured">
+              <div className="education-copy">
+                <p className="education-years">2022 - 2026</p>
+                <h3 className="education-qualification">B.Tech, Computer Science Engineering</h3>
+                <p className="education-specialization">Artificial Intelligence &amp; Data Science</p>
+                <p className="education-institution">Kakinada Institute of Engineering and Technology for Women (KIETW)</p>
               </div>
-              <div className="edu-card">
-                <div className="edu-card-header">
-                  <div>
-                    <h3 className="edu-degree">B.Tech — Computer Science Engineering</h3>
-                    <p className="edu-spec">Artificial Intelligence &amp; Data Science</p>
-                  </div>
-                  <span className="edu-badge graduated">✓ Graduated</span>
-                </div>
-                <p className="edu-institute">Kakinada Institute of Engineering and Technology for Women (KIETW)</p>
-                <div className="edu-meta">
-                  <span className="edu-year">📅 2022 – 2026</span>
-                  <span className="edu-score">📈 CGPA: 8.28</span>
-                </div>
+              {educationImageUrl('college-kietw') && (
+                <img className="education-image" src={educationImageUrl('college-kietw')} alt="KIETW college campus" loading="lazy" />
+              )}
+              <div className="education-score-row">
+                <strong className="education-score">8.28</strong>
+                <span className="education-score-label">CGPA / 10</span>
               </div>
-            </div>
-
-            {/* ── Intermediate ── */}
-            <div className="edu-item">
-              <div className="edu-connector">
-                <div className="edu-node inter">
-                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L2 6v2h20V6L12 1zm-8 7v10h3V8H4zm6 0v10h3V8h-3zm6 0v10h3V8h-3zm-14 12v2h20v-2H2z" /></svg>
-                </div>
-                <div className="edu-line" />
+            </article>
+            <article className="education-card">
+              <div className="education-copy">
+                <p className="education-years">2020 - 2022</p>
+                <h3 className="education-qualification">Intermediate, MPC</h3>
+                <p className="education-specialization">Mathematics, Physics, Chemistry</p>
+                <p className="education-institution">MGR Government Junior College</p>
               </div>
-              <div className="edu-card">
-                <div className="edu-card-header">
-                  <div>
-                    <h3 className="edu-degree">Intermediate — MPC</h3>
-                    <p className="edu-spec">Mathematics, Physics, Chemistry</p>
-                  </div>
-                  <span className="edu-badge completed">✓ Completed</span>
-                </div>
-                <p className="edu-institute">MGR Government Junior College</p>
-                <div className="edu-meta">
-                  <span className="edu-year">📅 2020 – 2022</span>
-                  <span className="edu-score">📈 81% — Grade: A</span>
-                </div>
+              {educationImageUrl('junior-college-mgr') && (
+                <img className="education-image" src={educationImageUrl('junior-college-mgr')} alt="MGR Government Junior College campus" loading="lazy" />
+              )}
+              <div className="education-score-row">
+                <strong className="education-score">81%</strong>
               </div>
-            </div>
-
-            {/* ── 10th Standard ── */}
-            <div className="edu-item no-line">
-              <div className="edu-connector">
-                <div className="edu-node ssc">
-                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L1 7v2h1v11h4v-7h4v7h10V9h1V7L12 2zm-1 9H9V9h2v2zm4 0h-2V9h2v2zm0 4h-2v-2h2v2z" /></svg>
-                </div>
+            </article>
+            <article className="education-card">
+              <div className="education-copy">
+                <p className="education-years">2019 - 2020</p>
+                <h3 className="education-qualification">10th Standard, SSC</h3>
+                <p className="education-specialization">General Sciences &amp; Mathematics</p>
+                <p className="education-institution">Ravindra High School</p>
               </div>
-              <div className="edu-card">
-                <div className="edu-card-header">
-                  <div>
-                    <h3 className="edu-degree">10th Standard — SSC</h3>
-                    <p className="edu-spec">General Sciences &amp; Mathematics</p>
-                  </div>
-                  <span className="edu-badge completed">✓ Completed</span>
-                </div>
-                <p className="edu-institute">Ravindra High School</p>
-                <div className="edu-meta">
-                  <span className="edu-year">📅 2019 – 2020</span>
-                  <span className="edu-score">📈 96% — Grade: A (High Academic Distinction)</span>
-                </div>
+              {educationImageUrl('school-ravindra') && (
+                <img className="education-image" src={educationImageUrl('school-ravindra')} alt="Ravindra High School campus" loading="lazy" />
+              )}
+              <div className="education-score-row">
+                <strong className="education-score">96%</strong>
               </div>
-            </div>
-
+            </article>
           </div>
         </div>
       </section>
@@ -305,79 +583,59 @@ export default function App() {
       <section id="skills" className="page-section">
         <div className="section-container">
           <div className="section-heading-wrap">
-            <h2 className="section-heading">Technical &amp; Professional Skills</h2>
+            <h2 className="section-heading">My Skills</h2>
             <div className="section-divider" />
           </div>
-          <div className="skills-grid">
+          <div className="skills-category-tabs" role="tablist" aria-label="Skill categories">
+            {skillCategories.map((category) => (
+              <button
+                key={category.name}
+                type="button"
+                className={`skills-category-tab ${activeSkillsCategory === category.name ? 'active' : ''}`}
+                id={`skills-tab-${category.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}
+                role="tab"
+                aria-selected={activeSkillsCategory === category.name}
+                aria-controls="skills-category-panel"
+                onClick={() => setActiveSkillsCategory(category.name)}
+              >
+                {category.name}
+              </button>
+            ))}
+          </div>
 
-            <div className="skill-card">
-              <div className="skill-card-icon">💻</div>
-              <h3>Programming Languages</h3>
-              <div className="tags">
-                <span>Python</span><span>C</span><span>Java (Basics)</span>
+          <div
+            className="skills-category-panel"
+            id="skills-category-panel"
+            role="tabpanel"
+            aria-labelledby={`skills-tab-${activeSkillsCategory.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}
+            key={activeSkillsCategory}
+          >
+            <div className="skills-card-grid">
+              {selectedSkills.map(({ name, Icon, color }) => (
+                <div className="skills-tech-card" key={name}>
+                  <Icon className="skills-tech-icon" style={{ color }} aria-hidden="true" />
+                  <span>{name}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="skills-marquee-section">
+            <p className="skills-marquee-label">All Technologies</p>
+            <div className="skills-marquee" aria-label="All technologies">
+              <div className="skills-marquee-track">
+                {[0, 1].map((copy) => (
+                  <div className="skills-marquee-group" aria-hidden={copy === 1} key={copy}>
+                    {allSkills.map(({ name, Icon, color }, index) => (
+                      <span className="skills-marquee-item" key={`${name}-${index}`}>
+                        <Icon style={{ color }} aria-hidden="true" />
+                        <span>{name}</span>
+                      </span>
+                    ))}
+                  </div>
+                ))}
               </div>
             </div>
-
-            <div className="skill-card">
-              <div className="skill-card-icon">🌐</div>
-              <h3>Web Development</h3>
-              <div className="tags">
-                <span>HTML5</span><span>CSS3</span><span>JavaScript</span><span>React.js</span>
-              </div>
-            </div>
-
-            <div className="skill-card">
-              <div className="skill-card-icon">⚙️</div>
-              <h3>Backend &amp; APIs</h3>
-              <div className="tags">
-                <span>FastAPI</span><span>Flask</span><span>RESTful APIs</span><span>JWT Auth</span>
-              </div>
-            </div>
-
-            <div className="skill-card">
-              <div className="skill-card-icon">🗄️</div>
-              <h3>Databases &amp; Storage</h3>
-              <div className="tags">
-                <span>MySQL</span><span>Data Modeling</span><span>Excel Datasets</span>
-              </div>
-            </div>
-
-            <div className="skill-card highlight-card">
-              <div className="skill-card-icon">🤖</div>
-              <h3>AI &amp; Emerging Tech</h3>
-              <div className="tags">
-                <span>Artificial Intelligence</span><span>Machine Learning</span>
-                <span>Generative AI</span><span>Agentic AI</span>
-                <span>Hugging Face APIs</span><span>Gemini API</span>
-              </div>
-            </div>
-
-            <div className="skill-card">
-              <div className="skill-card-icon">🛠️</div>
-              <h3>Dev Tools</h3>
-              <div className="tags">
-                <span>Git</span><span>GitHub</span><span>VS Code</span>
-              </div>
-            </div>
-
-            <div className="skill-card">
-              <div className="skill-card-icon">🎨</div>
-              <h3>Productivity &amp; Creative</h3>
-              <div className="tags">
-                <span>MS Excel</span><span>MS Word</span><span>PowerPoint</span>
-                <span>Canva</span><span>Adobe Photoshop</span>
-              </div>
-            </div>
-
-            <div className="skill-card">
-              <div className="skill-card-icon">🤝</div>
-              <h3>Interpersonal Skills</h3>
-              <div className="tags">
-                <span>Leadership</span><span>Team Management</span><span>Adaptability</span>
-                <span>Communication</span><span>Public Speaking</span><span>Creativity</span>
-              </div>
-            </div>
-
           </div>
         </div>
       </section>
@@ -469,6 +727,10 @@ export default function App() {
                   <li>Quick donor lookup by blood group and availability for fast retrieval.</li>
                 </ul>
                 <div className="project-links">
+                  <a href="https://blood-donation-khaki-beta.vercel.app/" target="_blank" rel="noreferrer" className="proj-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 3h7v7" /><path d="M10 14 21 3" /><path d="M21 14v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h6" /></svg>
+                    Live Demo
+                  </a>
                   <a href="https://github.com/IllaJyoCodingPro/Blood_Donation" target="_blank" rel="noreferrer" className="proj-link">
                     <svg viewBox="0 0 24 24" fill="currentColor"><path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" /></svg>
                     GitHub
@@ -494,36 +756,61 @@ export default function App() {
             <h2 className="section-heading">Internship Experience</h2>
             <div className="section-divider" />
           </div>
-          <div className="exp-timeline">
-
-            {[
-              { role: 'Python Full Stack Developer', org: 'Infosys Springboard Virtual Internship 6.0', date: 'Dec 2025 – Mar 2026', desc: 'Developed a full-stack web platform integrating real-time data for tracking, analytics, and visualization.' },
-              { role: 'Java Full Stack Developer', org: 'AICTE Virtual Internship', date: 'Jul 2025 – Sep 2025', desc: 'Built full-stack applications with backend integration and responsive frontend design.' },
-              { role: 'Web Full Stack Developer', org: 'AICTE Virtual Internship', date: 'Apr 2025 – Jun 2025', desc: 'Developed dynamic web applications with API integration and responsive UI.' },
-              { role: 'AI & ML', org: 'AICTE Virtual Internship', date: 'Jan 2025 – Mar 2025', desc: 'Applied machine learning techniques for data processing, model building, and evaluation.' },
-              { role: 'Google AI & ML', org: 'AICTE Virtual Internship', date: 'Jan 2025 – Mar 2025', desc: 'Explored AI/ML tools and implemented basic models for real-world problem-solving.' },
-              { role: 'Python Full Stack Developer', org: 'AICTE Virtual Internship', date: 'Oct 2024 – Dec 2024', desc: 'Built web applications using Python with frontend-backend integration.' },
-              { role: 'Data Science Master', org: 'AICTE Virtual Internship', date: 'Oct 2024 – Dec 2024', desc: 'Performed data analysis, visualization, and basic machine learning tasks.' },
-              { role: 'Google Android Developer', org: 'AICTE Virtual Internship', date: 'Oct 2024 – Dec 2024', desc: 'Developed basic Android applications with focus on UI and functionality.' },
-              { role: 'AI & Machine Learning', org: 'APSSDC Internship', date: 'May 2024 – Jun 2024', desc: 'Implemented machine learning models using Python for practical applications.' },
-              { role: 'Employment Skills', org: 'APSSDC Internship', date: 'May 2024 – Jun 2024', desc: 'Enhanced communication, teamwork, and professional workplace skills.' },
-              { role: 'Telugu LLM Data Contribution', org: 'SWECHA Internship (IIIT-Hyderabad)', date: 'May 2024 – Jun 2024', desc: 'Contributed to dataset annotation for Telugu LLM development in a national datathon.' },
-            ].map((item, i) => (
-              <div className="exp-item" key={i}>
-                <div className="exp-dot" />
-                <div className="exp-card">
-                  <div className="exp-card-top">
-                    <div>
-                      <h3 className="exp-role">{item.role}</h3>
-                      <p className="exp-org">{item.org}</p>
-                    </div>
-                    <span className="exp-date">{item.date}</span>
+          <div className="internship-groups">
+            {internshipGroups.map((group, index) => (
+              <section
+                className={`internship-group ${activeInternshipGroup === group.id ? 'is-open' : ''}`}
+                key={group.id}
+              >
+                <button
+                  type="button"
+                  className="internship-group-toggle"
+                  onClick={() => setActiveInternshipGroup((current) => current === group.id ? null : group.id)}
+                  aria-expanded={activeInternshipGroup === group.id}
+                  aria-controls={`internship-content-${group.id}`}
+                >
+                  <span className="internship-group-index">0{index + 1}</span>
+                  <span className="internship-group-title">
+                    <span className="internship-group-name">{group.organization}</span>
+                    <span className="internship-group-program">{group.program}</span>
+                  </span>
+                  <span className="internship-group-count">
+                    {String(group.internships.length).padStart(2, '0')} {group.internships.length === 1 ? 'CERTIFICATE' : 'CERTIFICATES'}
+                  </span>
+                  <span className="internship-group-chevron" aria-hidden="true" />
+                </button>
+                {activeInternshipGroup === group.id && (
+                  <div className="internship-card-grid" id={`internship-content-${group.id}`}>
+                    {group.internships.map((internship) => (
+                      <article className="internship-card" key={internship.title}>
+                        <button
+                          type="button"
+                          className="internship-certificate"
+                          onClick={() => setPreviewCert({
+                            title: internship.title,
+                            issuer: group.organization,
+                            image: internship.image,
+                          })}
+                          aria-label={`View ${internship.title} internship certificate`}
+                        >
+                          <img
+                            src={internship.image}
+                            alt={`${internship.title} internship certificate`}
+                            loading="lazy"
+                          />
+                          <span className="internship-certificate-action">View certificate</span>
+                        </button>
+                        <div className="internship-card-content">
+                          <span className="internship-duration">{internship.duration}</span>
+                          <h4>{internship.title}</h4>
+                          <p>{internship.description}</p>
+                        </div>
+                      </article>
+                    ))}
                   </div>
-                  <p className="exp-desc">{item.desc}</p>
-                </div>
-              </div>
+                )}
+              </section>
             ))}
-
           </div>
         </div>
       </section>
@@ -534,58 +821,330 @@ export default function App() {
       <section id="certifications" className="page-section alt-bg">
         <div className="section-container">
           <div className="section-heading-wrap">
-            <h2 className="section-heading">Certifications &amp; Achievements</h2>
+            <h2 className="section-heading">Certificates &amp; Certifications</h2>
             <div className="section-divider" />
           </div>
-          <div className="certs-layout">
 
-            <div className="certs-col">
-              <h3 className="certs-col-title">📜 Verified Certifications</h3>
-              <div className="cert-list">
-                {[
-                  { name: 'Foundations of Modern Machine Learning', issuer: 'IIIT Hyderabad', period: 'Aug 2023 – May 2024' },
-                  { name: 'Applied Artificial Intelligence', issuer: 'TechSaksham (Microsoft & SAP CSR Initiative)', period: '2024–25' },
-                  { name: 'Python Foundation Certification', issuer: 'Infosys Springboard', period: '' },
-                  { name: 'Artificial Intelligence Foundation Certification', issuer: 'Infosys', period: '' },
-                  { name: 'Data Science Foundation Certification', issuer: 'Infosys', period: '' },
-                ].map((c, i) => (
-                  <div className="cert-card" key={i}>
-                    <div className="cert-icon">🎓</div>
-                    <div>
-                      <p className="cert-name">{c.name}</p>
-                      <p className="cert-issuer">{c.issuer}{c.period ? ` · ${c.period}` : ''}</p>
+          <div className="certs-section-wrap">
+            {/* Filter Pills */}
+            <div className="certs-filters-container">
+              <div className="certs-filter-tabs" role="tablist" aria-label="Certificate filters">
+                {CERT_CATEGORIES.map((cat) => {
+                  const count =
+                    cat.id === 'All'
+                      ? certificationsData.length
+                      : certificationsData.filter((c) => c.category === cat.id).length;
+                  return (
+                    <button
+                      key={cat.id}
+                      type="button"
+                      className={`cert-filter-pill ${activeCertCategory === cat.id ? 'active' : ''}`}
+                      onClick={() => {
+                        setActiveCertCategory(cat.id);
+                        setCertPage(1);
+                      }}
+                    >
+                      <span className="cert-pill-label">{cat.label}</span>
+                      <span className="cert-pill-badge">{count}</span>
+                    </button>
+                  );
+                })}
+              </div>
+
+            </div>
+
+            {/* Active Filter Info & Count */}
+            <div className="cert-results-header">
+              <p className="cert-results-text">
+                Showing <strong>{firstVisibleCertificate}–{lastVisibleCertificate}</strong> of{' '}
+                <strong>{filteredCertifications.length}</strong> credentials
+                {activeCertCategory !== 'All' && <span> in <span className="highlight-tag">{activeCertCategory}</span></span>}
+              </p>
+              {activeCertCategory !== 'All' && (
+                <button
+                  type="button"
+                  className="cert-reset-btn"
+                  onClick={() => {
+                    setActiveCertCategory('All');
+                    setCertPage(1);
+                  }}
+                >
+                  Show All
+                </button>
+              )}
+            </div>
+
+            {/* Certifications Grid */}
+            {filteredCertifications.length > 0 ? (
+              <>
+                <div className="certs-modern-grid" id="certificates-grid">
+                {visibleCertifications.map((c) => (
+                  <div
+                    className="cert-modern-card"
+                    key={c.id}
+                    onClick={() => setPreviewCert(c)}
+                    role="button"
+                    tabIndex={0}
+                    title={`Click to view ${c.title}`}
+                  >
+                    {/* Media / Thumbnail preview */}
+                    <div className="cert-card-media">
+                      {c.image ? (
+                        <img
+                          src={c.image}
+                          alt={c.title}
+                          className="cert-card-img"
+                          loading="lazy"
+                          onError={(e) => {
+                            e.currentTarget.style.display = 'none';
+                            const fallback = e.currentTarget.parentElement?.querySelector('.cert-card-fallback');
+                            if (fallback) fallback.style.display = 'flex';
+                          }}
+                        />
+                      ) : null}
+                      <div
+                        className="cert-card-fallback"
+                        style={{ display: c.image ? 'none' : 'flex' }}
+                      >
+                        <div className="cert-fallback-icon-wrap">
+                          <FaCertificate />
+                        </div>
+                        <span className="cert-fallback-title">{c.issuer}</span>
+                        <span className="cert-fallback-hint">Click to view</span>
+                      </div>
+                    </div>
+
+                    {/* Card Content - Clean & Compact */}
+                    <div className="cert-card-content">
+                      <h3 className="cert-card-title">{c.title}</h3>
+                      <div className="cert-card-meta">
+                        <span className={`cert-type-badge ${c.type === 'Certification' ? 'is-certification' : 'is-certificate'}`}>
+                          {c.type}
+                        </span>
+                        <span className="cert-card-issuer">{c.issuer}</span>
+                      </div>
                     </div>
                   </div>
                 ))}
-              </div>
-            </div>
-
-            <div className="certs-col">
-              <h3 className="certs-col-title">🏆 Honors &amp; Awards</h3>
-              <div className="award-list">
-                <div className="award-card">
-                  <div className="award-icon">🥇</div>
-                  <div>
-                    <p className="award-name">1st Prize — College Hackathon (2nd Year)</p>
-                    <p className="award-desc">Awarded for designing and building the Blood Donation Management System.</p>
-                  </div>
                 </div>
-                <div className="award-card">
-                  <div className="award-icon">⭐</div>
-                  <div>
-                    <p className="award-name">Best Performer Recognition</p>
-                    <p className="award-desc">Recognized as Best Performer among 300+ participants in an intensive Agentic AI Workshop.</p>
-                  </div>
-                </div>
+                {certificatePageCount > 1 && (
+                  <nav className="cert-pagination" aria-label="Certificate pages">
+                    <button
+                      type="button"
+                      className="cert-page-btn cert-page-direction"
+                      onClick={() => goToCertificatePage(certPage - 1)}
+                      disabled={certPage === 1}
+                    >
+                      Previous
+                    </button>
+                    {Array.from({ length: certificatePageCount }, (_, index) => {
+                      const pageNumber = index + 1;
+                      return (
+                        <button
+                          key={pageNumber}
+                          type="button"
+                          className={`cert-page-btn ${certPage === pageNumber ? 'active' : ''}`}
+                          onClick={() => goToCertificatePage(pageNumber)}
+                          aria-label={`Page ${pageNumber}`}
+                          aria-current={certPage === pageNumber ? 'page' : undefined}
+                        >
+                          {pageNumber}
+                        </button>
+                      );
+                    })}
+                    <button
+                      type="button"
+                      className="cert-page-btn cert-page-direction"
+                      onClick={() => goToCertificatePage(certPage + 1)}
+                      disabled={certPage === certificatePageCount}
+                    >
+                      Next
+                    </button>
+                  </nav>
+                )}
+              </>
+            ) : (
+              <div className="cert-empty-box">
+                <FaCertificate className="cert-empty-icon" />
+                <h3>No certificates found in this filter</h3>
+                <p>
+                    Credentials for <strong>{activeCertCategory}</strong> are ready to be added.
+                </p>
+                <button
+                  type="button"
+                  className="cert-reset-btn"
+                  onClick={() => {
+                    setActiveCertCategory('All');
+                    setCertPage(1);
+                  }}
+                >
+                  Show All Credentials
+                </button>
               </div>
-            </div>
+            )}
 
           </div>
         </div>
       </section>
 
       {/* ═══════════════════════════════════════════
-          SECTION 8 — CONTACT
+          SECTION 8 — OTHERS
+      ═══════════════════════════════════════════ */}
+      <section id="others" className="page-section others-section">
+        <div className="section-container">
+          <div className="section-heading-wrap">
+            <h2 className="section-heading">Others</h2>
+            <div className="section-divider" />
+          </div>
+
+          <div className="others-switcher" role="group" aria-label="Choose Others content">
+            <button
+              type="button"
+              className={`others-switch-button ${activeOthersView === 'computer-courses' ? 'active' : ''}`}
+              onClick={() => setActiveOthersView('computer-courses')}
+              aria-pressed={activeOthersView === 'computer-courses'}
+            >
+              <span>Computer Courses</span>
+              <span className="others-switch-count">{String(computerCourses.length).padStart(2, '0')}</span>
+            </button>
+            <button
+              type="button"
+              className={`others-switch-button ${activeOthersView === 'achievements' ? 'active' : ''}`}
+              onClick={() => setActiveOthersView('achievements')}
+              aria-pressed={activeOthersView === 'achievements'}
+            >
+              <span>Achievements</span>
+              <span className="others-switch-count">{String(honorsAndAwards.length).padStart(2, '0')}</span>
+            </button>
+            <button
+              type="button"
+              className={`others-switch-button ${activeOthersView === 'badges' ? 'active' : ''}`}
+              onClick={() => setActiveOthersView('badges')}
+              aria-pressed={activeOthersView === 'badges'}
+            >
+              <span>Badges</span>
+              <span className="others-switch-count">{String(infosysBadges.length).padStart(2, '0')}</span>
+            </button>
+          </div>
+
+          <div className="others-panel" aria-live="polite">
+            {activeOthersView === 'computer-courses' ? (
+              <div className="others-block">
+                <div className="others-block-heading">
+                  <div>
+                    <h3>Computer Courses</h3>
+                  </div>
+                  <span className="others-count">{computerCourses.length} courses</span>
+                </div>
+                <div className="others-achievement-grid">
+                  {computerCourses.map((course) => (
+                    <article className="others-award-card" key={course.id}>
+                      <div className="others-award-topline">
+                        <span className="others-award-icon"><FaCertificate aria-hidden="true" /></span>
+                        <span className="others-award-badge">{course.badge}</span>
+                      </div>
+                      <h4>{course.title}</h4>
+                      {course.issuer ? <p className="others-course-issuer">{course.issuer}</p> : null}
+                      <p>{course.desc}</p>
+                      {course.image ? (
+                        <div className="others-course-preview-row">
+                          <img
+                            src={course.image}
+                            alt={course.title}
+                            className="others-course-thumb"
+                            loading="lazy"
+                          />
+                          <button
+                            type="button"
+                            className="others-course-preview-btn"
+                            onClick={() => setPreviewCert({
+                              title: course.title,
+                              issuer: course.badge,
+                              image: course.image,
+                            })}
+                            aria-label={`View ${course.title} certificate`}
+                          >
+                            View certificate
+                          </button>
+                        </div>
+                      ) : (
+                        <button
+                          type="button"
+                          className="others-course-preview-btn"
+                          onClick={() => setPreviewCert({
+                            title: course.title,
+                            issuer: course.badge,
+                            image: course.image,
+                          })}
+                          aria-label={`View ${course.title} certificate`}
+                        >
+                          View certificate
+                        </button>
+                      )}
+                      <a href={course.link} target="_blank" rel="noreferrer" className="others-post-link">
+                        View LinkedIn post <FaArrowUpRightFromSquare aria-hidden="true" />
+                      </a>
+                    </article>
+                  ))}
+                </div>
+              </div>
+            ) : activeOthersView === 'achievements' ? (
+              <div className="others-block">
+                <div className="others-block-heading">
+                  <div>
+                    <h3>Achievements</h3>
+                  </div>
+                  <span className="others-count">{honorsAndAwards.length} highlights</span>
+                </div>
+                <div className="others-achievement-grid">
+                  {honorsAndAwards.map((award) => (
+                    <article className="others-award-card" key={award.id}>
+                      <div className="others-award-topline">
+                        <span className="others-award-icon"><FaTrophy aria-hidden="true" /></span>
+                        <span className="others-award-badge">{award.badge}</span>
+                      </div>
+                      <h4>{award.title}</h4>
+                      <p>{award.desc}</p>
+                      <a href={award.link} target="_blank" rel="noreferrer" className="others-post-link">
+                        View LinkedIn post <FaArrowUpRightFromSquare aria-hidden="true" />
+                      </a>
+                    </article>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <div className="others-block others-badges-block">
+                <div className="others-block-heading">
+                  <div>
+                    <h3>Infosys Springboard badges</h3>
+                  </div>
+                  <span className="others-count">{infosysBadges.length} badges</span>
+                </div>
+                <div className="others-badge-grid">
+                  {infosysBadges.map((badge) => (
+                    <button
+                      type="button"
+                      className="others-badge-card"
+                      key={badge.title}
+                      onClick={() => setSelectedBadge(badge)}
+                      aria-label={`View ${badge.title} badge`}
+                    >
+                      <span className="others-badge-art">
+                        <img src={badge.image} alt={`${badge.title} Infosys Springboard badge`} loading="lazy" />
+                      </span>
+                      <span className="others-badge-title">{badge.title}</span>
+                      <span className="others-badge-issuer">Infosys Springboard</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════
+          SECTION 9 — CONTACT
       ═══════════════════════════════════════════ */}
       <section id="contact" className="page-section">
         <div className="section-container">
@@ -594,74 +1153,222 @@ export default function App() {
             <div className="section-divider" />
             <p className="contact-intro">I'm open to full-time opportunities, internships, and collaborations. Feel free to reach out!</p>
           </div>
-          <div className="contact-layout">
-
-            <div className="contact-info-col">
-              <a href="mailto:illajyothibhavani@gmail.com" className="contact-item">
-                <div className="contact-item-icon">✉️</div>
-                <div>
-                  <p className="contact-item-label">Email</p>
-                  <p className="contact-item-value">illajyothibhavani@gmail.com</p>
-                </div>
+          <div className="contact-card">
+            <div className="contact-social-links" aria-label="Contact links">
+              <a
+                href="https://www.linkedin.com/in/illa-jyothi-bhavani/"
+                target="_blank"
+                rel="noreferrer"
+                className="contact-social-link"
+                aria-label="LinkedIn"
+                title="LinkedIn"
+              >
+                <FaLinkedin aria-hidden="true" />
               </a>
-
-              <a href="https://www.linkedin.com/in/illa-jyothi-bhavani/" target="_blank" rel="noreferrer" className="contact-item">
-                <div className="contact-item-icon">💼</div>
-                <div>
-                  <p className="contact-item-label">LinkedIn</p>
-                  <p className="contact-item-value">illa-jyothi-bhavani</p>
-                </div>
+              <a
+                href="https://github.com/IllaJyoCodingPro"
+                target="_blank"
+                rel="noreferrer"
+                className="contact-social-link"
+                aria-label="GitHub"
+                title="GitHub"
+              >
+                <FaGithub aria-hidden="true" />
               </a>
-              <a href="https://github.com/IllaJyoCodingPro" target="_blank" rel="noreferrer" className="contact-item">
-                <div className="contact-item-icon">🐙</div>
-                <div>
-                  <p className="contact-item-label">GitHub</p>
-                  <p className="contact-item-value">IllaJyoCodingPro</p>
-                </div>
+              <a
+                href="mailto:illajyothibhavani@gmail.com"
+                className="contact-social-link"
+                aria-label="Email"
+                title="Email"
+              >
+                <FaEnvelope aria-hidden="true" />
               </a>
-              <div className="contact-item no-hover">
-                <div className="contact-item-icon">📍</div>
-                <div>
-                  <p className="contact-item-label">Location</p>
-                  <p className="contact-item-value">Mummidivaram, Andhra Pradesh, 533216</p>
-                </div>
-              </div>
             </div>
+            <a className="contact-location" href="mailto:illajyothibhavani@gmail.com">
+              illajyothibhavani@gmail.com
+            </a>
+            <div className="contact-message-prompt">
+              <h3>Send a Message</h3>
+              <p>I'll reply within <strong>24 hours</strong>.</p>
+            </div>
+            <div className="contact-card-divider" />
 
-            <form className="contact-form" onSubmit={(e) => e.preventDefault()}>
-              <div className="form-group">
-                <label htmlFor="cf-name">Your Name</label>
-                <input id="cf-name" type="text" placeholder="e.g. John Doe" />
+            <form className="contact-card-form" onSubmit={(e) => e.preventDefault()}>
+              <div className="contact-fields">
+                <div className="contact-form-field">
+                  <label htmlFor="cf-name">Your Name</label>
+                  <input id="cf-name" type="text" placeholder="e.g. John Doe" />
+                </div>
+                <div className="contact-form-field">
+                  <label htmlFor="cf-email">Email Address</label>
+                  <input id="cf-email" type="email" placeholder="e.g. john@example.com" />
+                </div>
+                <div className="contact-form-field contact-message-field">
+                  <label htmlFor="cf-msg">Message</label>
+                  <textarea id="cf-msg" rows={4} placeholder="Your message or opportunity..." />
+                </div>
               </div>
-              <div className="form-group">
-                <label htmlFor="cf-email">Email Address</label>
-                <input id="cf-email" type="email" placeholder="e.g. john@example.com" />
-              </div>
-              <div className="form-group">
-                <label htmlFor="cf-msg">Message</label>
-                <textarea id="cf-msg" placeholder="Your message or opportunity..." />
-              </div>
-              <button type="submit" className="cta-btn primary full-width">Send Message ➔</button>
+              <button type="submit" className="contact-send-button">
+                Send Message <FaArrowRight aria-hidden="true" />
+              </button>
             </form>
-
           </div>
         </div>
       </section>
 
       {/* ── Footer ── */}
       <footer className="site-footer">
-        <p className="footer-name">Illa Jyothi Bhavani</p>
-        <p className="footer-sub">B.Tech Graduate · AI &amp; Data Science · Full Stack Developer</p>
-        <div className="footer-links">
-          <a href="mailto:illajyothibhavani@gmail.com">Email</a>
-          <span>·</span>
-          <a href="https://github.com/IllaJyoCodingPro" target="_blank" rel="noreferrer">GitHub</a>
-          <span>·</span>
-          <a href="https://www.linkedin.com/in/illa-jyothi-bhavani/" target="_blank" rel="noreferrer">LinkedIn</a>
-
+        <div className="footer-main">
+          <div className="footer-profile">
+            <button className="footer-name" onClick={() => scrollTo('home')}>
+              Illa Jyothi Bhavani
+            </button>
+            <p className="footer-sub">
+              B.Tech graduate in AI &amp; Data Science, building useful AI applications and thoughtful full-stack experiences.
+            </p>
+          </div>
+          <nav className="footer-navigation" aria-label="Footer navigation">
+            <h2 className="footer-column-title">Explore</h2>
+            <ul className="footer-nav-list">
+              {navLinks.map((link) => (
+                <li key={link.id}>
+                  <button type="button" className="footer-nav-link" onClick={() => scrollTo(link.id)}>
+                    {link.label}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </nav>
+          <div className="footer-connect">
+            <h2 className="footer-column-title">Connect</h2>
+            <div className="footer-social-links">
+              <a href="https://www.linkedin.com/in/illa-jyothi-bhavani/" target="_blank" rel="noreferrer" aria-label="LinkedIn" title="LinkedIn">
+                <FaLinkedin aria-hidden="true" />
+              </a>
+              <a href="https://github.com/IllaJyoCodingPro" target="_blank" rel="noreferrer" aria-label="GitHub" title="GitHub">
+                <FaGithub aria-hidden="true" />
+              </a>
+              <a href="mailto:illajyothibhavani@gmail.com" aria-label="Email" title="Email">
+                <FaEnvelope aria-hidden="true" />
+              </a>
+            </div>
+          </div>
         </div>
-        <p className="footer-copy">© 2026 Illa Jyothi Bhavani. All rights reserved.</p>
+        <div className="footer-bottom">
+          <p className="footer-copy">© 2026 Illa Jyothi Bhavani. All rights reserved.</p>
+          <p className="footer-built">Made with React</p>
+        </div>
       </footer>
+
+      {/* ── Certificate Preview Modal / Lightbox ── */}
+      {previewCert && (
+        <div
+          className="cert-modal-backdrop"
+          onClick={() => setPreviewCert(null)}
+          role="dialog"
+          aria-modal="true"
+          aria-label={`Preview of ${previewCert.title}`}
+        >
+          <div
+            className="cert-modal-dialog"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="cert-modal-header">
+              <div>
+                <h3 className="cert-modal-title">{previewCert.title}</h3>
+              </div>
+              <button
+                type="button"
+                className="cert-modal-close"
+                onClick={() => setPreviewCert(null)}
+                aria-label="Close modal"
+              >
+                <FaXmark />
+              </button>
+            </div>
+
+            <div className="cert-modal-body">
+              <div className="cert-modal-img-container">
+                {previewCert.image ? (
+                  <img
+                    src={previewCert.image}
+                    alt={previewCert.title}
+                    className="cert-modal-img"
+                    onError={(e) => {
+                      e.currentTarget.style.display = 'none';
+                      const fallback = e.currentTarget.parentElement?.querySelector('.cert-modal-img-fallback');
+                      if (fallback) fallback.style.display = 'flex';
+                    }}
+                  />
+                ) : null}
+                <div
+                  className="cert-modal-img-fallback"
+                  style={{ display: previewCert.image ? 'none' : 'flex' }}
+                >
+                  <FaCertificate className="cert-modal-fallback-icon" />
+                  <h4>Certificate Image Preview</h4>
+                  <p>Move your certificate file into:</p>
+                  <code>public/certificates/{previewCert.image ? previewCert.image.replace('/certificates/', '') : 'fmml.jpg'}</code>
+                  <span className="cert-modal-fallback-sub">
+                    Once placed in that folder, your certificate will display right here automatically.
+                  </span>
+                </div>
+              </div>
+
+            </div>
+
+            <div className="cert-modal-footer">
+              {previewCert.image && (
+                <a
+                  href={previewCert.image}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="cert-modal-link-btn"
+                >
+                  <FaArrowUpRightFromSquare /> Open Full Image
+                </a>
+              )}
+              <button
+                type="button"
+                className="cert-modal-close-btn"
+                onClick={() => setPreviewCert(null)}
+              >
+                Close Preview
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {selectedBadge && (
+        <div
+          className="badge-modal-backdrop"
+          onClick={() => setSelectedBadge(null)}
+          role="dialog"
+          aria-modal="true"
+          aria-label={`${selectedBadge.title} badge`}
+        >
+          <div className="badge-modal-dialog" onClick={(e) => e.stopPropagation()}>
+            <div className="badge-modal-header">
+              <div>
+                <span className="others-eyebrow">INFOSYS SPRINGBOARD</span>
+                <h3>{selectedBadge.title}</h3>
+              </div>
+              <button
+                type="button"
+                className="cert-modal-close"
+                onClick={() => setSelectedBadge(null)}
+                aria-label="Close badge image"
+              >
+                <FaXmark />
+              </button>
+            </div>
+            <div className="badge-modal-image-wrap">
+              <img src={selectedBadge.image} alt={`${selectedBadge.title} Infosys Springboard badge`} />
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
   );
