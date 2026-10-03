@@ -321,24 +321,42 @@ export default function App() {
     setContactSubmitting(true);
     setContactStatus(null);
 
+    const accessKey = import.meta.env.VITE_WEB3FORMS_ACCESS_KEY;
+    if (!accessKey) {
+      setContactStatus({
+        type: 'error',
+        message: 'The contact form is not configured yet. Please email me directly.',
+      });
+      setContactSubmitting(false);
+      return;
+    }
+
     const form = event.currentTarget;
     const formData = new FormData(form);
-    const payload = Object.fromEntries(formData.entries());
+    const payload = {
+      ...Object.fromEntries(formData.entries()),
+      access_key: accessKey,
+      subject: 'New portfolio contact form submission',
+      from_name: 'Portfolio Contact Form',
+    };
 
     try {
-      const response = await fetch('/api/contact', {
+      const response = await fetch('https://api.web3forms.com/submit', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
         body: JSON.stringify(payload),
       });
       const result = await response.json().catch(() => ({}));
 
-      if (!response.ok) {
-        throw new Error(result.error || 'Your message could not be saved. Please try again later.');
+      if (!response.ok || !result.success) {
+        throw new Error(result.message || 'Your message could not be sent. Please try again later.');
       }
 
       form.reset();
-      setContactStatus({ type: 'success', message: 'Your message was saved successfully.' });
+      setContactStatus({ type: 'success', message: 'Your message was sent successfully. Thank you for reaching out!' });
     } catch (error) {
       setContactStatus({
         type: 'error',
@@ -1244,8 +1262,7 @@ export default function App() {
                 </div>
               </div>
               <div className="contact-form-trap" aria-hidden="true">
-                <label htmlFor="cf-website">Leave this field empty</label>
-                <input id="cf-website" name="website" type="text" tabIndex="-1" autoComplete="off" />
+                <input id="cf-botcheck" name="botcheck" type="checkbox" tabIndex="-1" aria-label="Bot check" />
               </div>
               <button type="submit" className="contact-send-button" disabled={contactSubmitting}>
                 {contactSubmitting ? 'Saving...' : 'Send Message'} <FaArrowRight aria-hidden="true" />
